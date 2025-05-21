@@ -1,0 +1,50 @@
+{% set name = "pyproject-examples" %}
+{% set version = "2023.6.30" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
+  sha256: 22fb824b7847ae7e04ad2aa1fb1b4c380609ec7f48c43770a3f93486ee9a268b
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<36]
+
+requirements:
+  host:
+    - python
+    - whey
+    - pip
+  run:
+    - python
+    - coincidence >=0.4.0
+    - dom-toml >=0.4.0
+    - packaging >=21.3
+    - pytest >=6.2.3
+
+test:
+  imports:
+    - pyproject_examples
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+  requires:
+    - pip
+
+about:
+  home: https://github.com/repo-helper/pyproject-examples
+  summary: Example pyproject.toml configs for testing.
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  description: These are designed to be used in the testsuite for pyproject-parser and whey, but may be useful for other tools based on those.
+  doc_url: https://github.com/repo-helper/pyproject-examples/blob/master/README.rst
+  dev_url: https://github.com/repo-helper/pyproject-examples
+
+extra:
+  recipe-maintainers:
+    - PatrykKups
